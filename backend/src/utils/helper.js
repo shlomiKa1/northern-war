@@ -55,10 +55,6 @@ export function playerAttack(
   const sourceContainDest = checkNeighborsTerr(source, destenation);
 
   if (sourceBelongPlayer && destBelongComputer && sourceContainDest) {
-    const currentTerr = player.territories.find(
-      (terr) => terr.id === source.id,
-    );
-    currentTerr.soldiers -= sentSoldiers;
     player.phase = "move";
   }
 }
@@ -69,4 +65,44 @@ function checkTerrtorie(territorie, player) {
 
 function checkNeighborsTerr(sourceTerr, destTerr) {
   return sourceTerr.neighbors.some((terr) => terr.id === destTerr.id);
+}
+
+export function calculateFight(
+  territoriesAttack,
+  territoriesDefendes,
+  sentSoldiers,
+) {
+  const { sentSoldiers, defendingSoldiers } = calculatePowers(
+    sentSoldiers,
+    territoriesDefendes.soldiers,
+  );
+
+  territoriesAttack.soldiers -= territoriesAttack.sentSoldiers;
+
+  if (attackPower > defensePower) {
+    const survivors = Math.max(
+      1,
+      Math.ceil((sentSoldiers * (attackPower - defensePower)) / attackPower),
+    );
+
+    territoriesAttack.soldiers = survivors;
+    territoriesAttack.owner =
+      territoriesAttack.owner === "player" ? "computer" : "player";
+  } else {
+    territoriesDefendes.soldiers = Math.max(
+      1,
+      Math.ceil(
+        (defendingSoldiers * (defensePower - attackPower)) / defensePower,
+      ),
+    );
+  }
+}
+
+export function calculatePowers(sentSoldiers, defendingSoldiers) {
+  const attackLuck = 0.6 + Math.random() * 0.4;
+  const defenseLuck = 0.6 + Math.random() * 0.4;
+
+  const attackPower = sentSoldiers * attackLuck;
+  const defensePower = defendingSoldiers * defenseLuck;
+  return { attackPower, defensePower };
 }
