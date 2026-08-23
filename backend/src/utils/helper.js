@@ -28,3 +28,10 @@ async function createGame(name) {
 }
 
 console.log(await createGame("Momo"));
+
+function endPlayerRound(player) {
+  if (player.phase === "end-turn" || player.phase === "move") {
+    player.round++;
+    player.phase = "reinforce";
+  }
+}
