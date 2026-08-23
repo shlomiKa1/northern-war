@@ -3,5 +3,8 @@ export default function (collection) {
     return await collection.findOne(filter);
   }
 
-  return { findOne };
+  async function create(data) {
+    return await collection.insertOne(data);
+  }
+  return { findOne, create };
 }
