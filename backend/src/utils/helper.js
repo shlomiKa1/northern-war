@@ -1,7 +1,7 @@
 import { loadJson } from "./data.js";
 import path from "path";
 
-const filePath = path.join(process.cwd(), "../../", "map.js");
+const filePath = path.join(process.cwd(), "", "map.js");
 async function getTerritories() {
   const territories = await loadJson(filePath);
 
@@ -41,4 +41,32 @@ export function reinforcement(territorie, player) {
     territorie.soldiers += 3;
     player.phase = "attack";
   }
+}
+
+export function playerAttack(
+  player,
+  computer,
+  source,
+  destenation,
+  sentSoldiers,
+) {
+  const sourceBelongPlayer = checkTerrtorie(source, player);
+  const destBelongComputer = checkTerrtorie(destenation, computer);
+  const sourceContainDest = checkNeighborsTerr(source, destenation);
+
+  if (sourceBelongPlayer && destBelongComputer && sourceContainDest) {
+    const currentTerr = player.territories.find(
+      (terr) => terr.id === source.id,
+    );
+    currentTerr.soldiers -= sentSoldiers;
+    player.phase = "move";
+  }
+}
+
+function checkTerrtorie(territorie, player) {
+  return player.territories.some((terr) => terr.id === territorie.id);
+}
+
+function checkNeighborsTerr(sourceTerr, destTerr) {
+  return sourceTerr.neighbors.some((terr) => terr.id === destTerr.id);
 }
