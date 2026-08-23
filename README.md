@@ -9,3 +9,9 @@ cp backend/src/example.env backend/src/.env
 ```bash
 docker-compose up --build
 ```
+
+---
+
+## בחירת מבנה נתונים
+
+בחרתי ב MongoDB כי יש פה ישויות במערך וגם יש יישות שלא מופיע בכולם (מפקדה).
