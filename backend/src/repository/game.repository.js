@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 
-export default function (collection) {
+export default function createGameRepository(collection) {
   async function findOne(filter) {
     return await collection.findOne(filter);
   }
@@ -16,5 +16,5 @@ export default function (collection) {
     );
   }
 
-  return { findOne, create, update};
+  return { findOne, create, update };
 }
