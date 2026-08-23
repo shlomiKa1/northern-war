@@ -27,9 +27,7 @@ async function createGame(name) {
   return player;
 }
 
-console.log(await createGame("Momo"));
-
-function endPlayerRound(player) {
+export function endPlayerRound(player) {
   if (player.phase === "end-turn" || player.phase === "move") {
     player.round++;
     player.phase = "reinforce";
@@ -43,13 +41,7 @@ export function reinforcement(territorie, player) {
   }
 }
 
-export function playerAttack(
-  player,
-  computer,
-  source,
-  destenation,
-  sentSoldiers,
-) {
+export function playerAttack(player, computer, source, destenation) {
   const sourceBelongPlayer = checkTerrtorie(source, player);
   const destBelongComputer = checkTerrtorie(destenation, computer);
   const sourceContainDest = checkNeighborsTerr(source, destenation);
@@ -70,14 +62,14 @@ function checkNeighborsTerr(sourceTerr, destTerr) {
 export function calculateFight(
   territoriesAttack,
   territoriesDefendes,
-  sentSoldiers,
+  numSoldiers,
 ) {
   const { sentSoldiers, defendingSoldiers } = calculatePowers(
-    sentSoldiers,
+    numSoldiers,
     territoriesDefendes.soldiers,
   );
 
-  territoriesAttack.soldiers -= territoriesAttack.sentSoldiers;
+  territoriesAttack.soldiers -= numSoldiers;
 
   if (attackPower > defensePower) {
     const survivors = Math.max(
@@ -105,4 +97,8 @@ export function calculatePowers(sentSoldiers, defendingSoldiers) {
   const attackPower = sentSoldiers * attackLuck;
   const defensePower = defendingSoldiers * defenseLuck;
   return { attackPower, defensePower };
+}
+
+function validSendSoldiers(soldiers, send) {
+  return soldiers - send >= 1 && send >= 1 && Number.isInteger(send);
 }
