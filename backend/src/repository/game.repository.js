@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+
 export default function (collection) {
   async function findOne(filter) {
     return await collection.findOne(filter);
@@ -6,5 +8,13 @@ export default function (collection) {
   async function create(data) {
     return await collection.insertOne(data);
   }
-  return { findOne, create };
+
+  async function update(id, data) {
+    return await collection.findOneAndUpfate(
+      { _id: new ObjectId(id) },
+      { $set: data },
+    );
+  }
+
+  return { findOne, create, update};
 }
