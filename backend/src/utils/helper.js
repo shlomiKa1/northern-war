@@ -35,3 +35,10 @@ function endPlayerRound(player) {
     player.phase = "reinforce";
   }
 }
+
+export function reinforcement(territorie, player) {
+  if (player.territories.include((terr) => terr.id === territorie.id)) {
+    territorie.soldiers += 3;
+    player.phase = "attack";
+  }
+}
