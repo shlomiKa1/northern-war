@@ -1,6 +1,6 @@
-import { checkNeighborsTerr, getPlayerTerritories } from "../utils/helper.js";
+import { checkNeighborsTerr } from "../utils/helper.js";
 
-export function reinforceComputer(player, computer) {
+export function reinforceComputer(player) {
   const minDistanceComputer = Math.min(
     ...player.map((terr) => terr.distanceFromComputerHQ),
   );
@@ -56,16 +56,13 @@ function highDistance(player, minDistanceComputer) {
   }
 }
 
-export function attackComputer(game) {
-  const playerTerritories = getPlayerTerritories(game, "player");
-  const computerTerritories = getPlayerTerritories(game, "computer");
-
+export function attackComputer(game, computerTerritories, playerTerritories) {
   const attacingScoure = [];
   for (const computerTerr of computerTerritories) {
     for (const playerTerr of playerTerritories) {
       attacingScoure.push({
-        fromId: computerTerr.id,
-        toId: playerTerr.id,
+        from: computerTerr,
+        to: playerTerr,
         scoure: attackAlgorithm(computerTerr, playerTerr),
       });
     }
@@ -76,19 +73,20 @@ export function attackComputer(game) {
     (attack) => attack.scoure === maxScoure,
   );
 
-  if (doplicateMaxScoure.length === 1) return doplicateMaxScoure[0];
-
+  if (doplicateMaxScoure.length === 1) {
+    return doplicateMaxScoure[0];
+  }
   if (doplicateMaxScoure.length > 1) {
     const minFromId = Math.min(
-      ...doplicateMaxScoure.map((attack) => attack.fromId),
+      ...doplicateMaxScoure.map((attack) => attack.from.id),
     );
     const minToId = Math.min(
       ...doplicateMaxScoure
-        .filter((attack) => attack.fromId === minFromId)
-        .map((attack) => attack.toId),
+        .filter((attack) => attack.from.id === minFromId)
+        .map((attack) => attack.to.id),
     );
 
-    return {};
+    return minToId[0];
   }
 }
 

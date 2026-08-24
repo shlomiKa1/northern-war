@@ -1,17 +1,20 @@
 import { ObjectId } from "mongodb";
 import {
   schemaAttack,
+  schemaMove,
   schemaNewGame,
   schemaReinforce,
 } from "../modules/game.js";
 import {
   calculateFight,
   createGame,
+  endPlayerRound,
   getPlayerTerritories,
   playerAttack,
   reinforcement,
   validSendSoldiers,
 } from "../utils/helper.js";
+import { attackComputer, reinforceComputer } from "./computer.service.js";
 
 function errMessage(message, statusCode) {
   const objMessage = typeof message === "object" ? message.error : message;
@@ -128,5 +131,47 @@ export default function createeGameService(gameRepo) {
     };
   }
 
-  return { createNewGame, getGame, reinforce, attack };
+  async function move(gameId, data) {
+    const parsed = schemaMove.safeParse(data);
+
+    if (!parsed.success) {
+      throw new errMessage(parsed.error.issues, 400);
+    }
+
+    const game = await getGame(gameId);
+
+    if (game.phase !== "move") return;
+
+    const player = getPlayerTerritories(game, "player");
+    const source = player.find((terr) => terr.id === parsed.data.fromId);
+    const dest = player.find((terr) => terr.id === parsed.data.toId);
+
+    if (source && dest) {
+      if (!validSendSoldiers(source.soldiers, parsed.data.soldiers))
+        throw new errMessage("Sent soldiers is not valid", 422);
+
+      const computer = getPlayerTerritories(game, "computer");
+      reinforceComputer(player);
+      const attacking = attackComputer(game, computer, player);
+      await update(gameId, attacking);
+      return { game, playerEvent: source, computerEvents: attacking };
+    }
+  }
+
+  async function endTurn(gameId) {
+    const game = await getGame(gameId);
+
+    if (game.phase === "move") {
+      if (game.status !== "finished") {
+        endPlayerRound(game);
+      }
+      const computer = getPlayerTerritories(game, "computer");
+      const player = getPlayerTerritories(game, "player");
+      reinforceComputer(player);
+      const attacking = attackComputer(game, computer, player);
+      await update(gameId, attacking);
+      return { game, playerEvent: null, computerEvents: attacking };
+    }
+  }
+  return { createNewGame, getGame, reinforce, attack, endTurn };
 }
