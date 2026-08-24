@@ -14,3 +14,9 @@ export const schemaAttack = z.object({
   soldiers: z.number().int().min(1).default(null),
   skip: z.boolean().default(false),
 });
+
+export const schemaMove = z.object({
+  fromId: z.number().int(),
+  toId: z.number().int(),
+  soldiers: z.number().int().min(1),
+});
