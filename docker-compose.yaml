@@ -1,0 +1,11 @@
+services:
+  app:
+    build: ./backend/src
+    ports:
+      - "3001:3001"
+    volumes:
+      - /backend:/app
+      - /node_moudules/app
+
+    env_file:
+      - /backend/.env
