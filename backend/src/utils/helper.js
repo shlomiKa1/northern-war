@@ -23,7 +23,6 @@ export async function createGame(playerName) {
     status: "playing",
     winner: null,
     territories: territories,
-    // territories: territories.filter((terr) => terr.owner === "player"),
   };
 
   return player;
@@ -88,7 +87,7 @@ export function calculateFight(
     );
 
     territoriesDefendes.soldiers = survivors;
-    territoriesDefendes.owner = "player"
+    territoriesDefendes.owner = "player";
   } else {
     const survivors = Math.max(
       1,
@@ -99,13 +98,13 @@ export function calculateFight(
 
     territoriesDefendes.soldiers = territoriesDefendes.soldiers || survivors;
   }
-    return {
+  return {
     attack: territoriesAttack.soldiers,
     soldiers: territoriesDefendes,
   };
 }
 
-export function validSendSoldiers(soldiers, send) {  
+export function validSendSoldiers(soldiers, send) {
   return soldiers - send >= 1 && send >= 1;
 }
 
