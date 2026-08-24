@@ -26,5 +26,13 @@ export default function createGameRouter(gameService) {
     res.send(game);
   });
 
+  router.post("/:id/attack", async (req, res) => {
+    const gameId = req.params.id;
+    const body = req.body;
+    const game = await gameService.attack(gameId, body);
+
+    res.send(game);
+  });
+  
   return router;
 }
