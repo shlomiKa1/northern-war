@@ -10,7 +10,7 @@ export default function createGameRepository(collection) {
   }
 
   async function update(id, data) {
-    return await collection.findOneAndUpfate(
+    return await collection.findOneAndUpdate(
       { _id: new ObjectId(id) },
       { $set: data },
     );
