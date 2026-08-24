@@ -7,3 +7,10 @@ export const schemaNewGame = z.object({
 export const schemaReinforce = z.object({
   territoryId: z.number().int(),
 });
+
+export const schemaAttack = z.object({
+  fromId: z.number().int().default(null),
+  toId: z.number().int().default(null),
+  soldiers: z.number().int().min(1).default(null),
+  skip: z.boolean().default(false),
+});
