@@ -173,5 +173,5 @@ export default function createeGameService(gameRepo) {
       return { game, playerEvent: null, computerEvents: attacking };
     }
   }
-  return { createNewGame, getGame, reinforce, attack, endTurn };
+  return { createNewGame, getGame, reinforce, attack, move, endTurn };
 }
