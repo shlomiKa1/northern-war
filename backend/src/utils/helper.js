@@ -63,7 +63,7 @@ function checkTerrtorie(territorie, player) {
   return player.some((terr) => terr.id === territorie.id);
 }
 
-function checkNeighborsTerr(sourceTerr, destTerr) {
+export function checkNeighborsTerr(sourceTerr, destTerr) {
   return sourceTerr.some((n) => n === destTerr.id);
 }
 
