@@ -11,7 +11,6 @@ export default function createeGameService(gameRepo) {
       const parsed = schemaNewGame.safeParse(playerName);
 
     if (!parsed.success ) {
-    //   throw new Error({ message: parsed.error.issues, status: 400 });
       throw new errMessage(parsed.error.issues, 400 );
     }
 

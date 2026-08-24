@@ -5,8 +5,10 @@ export default function createGameRouter(gameService) {
 
   router.post("/games", async (req, res) => {
     const playerName = req.body;
-    const game = await gameService.createNewGame({ playerName });
+    const game = await gameService.createNewGame(playerName);
 
     res.status(201).send(game);
   });
+
+  return router;
 }
